@@ -1,3 +1,4 @@
+//function to get Computer Choice
 function getComputerChoice(){
     const computerOptions = ["rock", "paper", "scissors"];
 
@@ -5,7 +6,7 @@ function getComputerChoice(){
     return computerOptions[comChoiceNum]; 
 }
 
-
+//function to get round winner
 function playRound(playerChoice, comChoice) {
     playerChoice = playerChoice.toLowerCase();
 
@@ -34,6 +35,7 @@ function playRound(playerChoice, comChoice) {
     return "Not a valid choice";
 }
 
+//helper function to game function check the winner of round 
 function roundStatus(){
     let computerSelection = getComputerChoice();
     let playerSelection = prompt("Rock, paper or scissors? Choose");
@@ -50,7 +52,7 @@ function roundStatus(){
     return status;
 }
 
-
+//function to start the game
 function game(){
     let computerScore = 0;
     let playerScore = 0;
