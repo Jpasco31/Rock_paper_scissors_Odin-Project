@@ -34,8 +34,49 @@ function playRound(playerChoice, comChoice) {
     return "Not a valid choice";
 }
 
-// const computerSelection = getComputerChoice();
-// const playerSelection = prompt("Rock, paper or scissors? Choose");
+function roundStatus(){
+    let computerSelection = getComputerChoice();
+    let playerSelection = prompt("Rock, paper or scissors? Choose");
+    let status = playRound(playerSelection, computerSelection);
+
+    if(status === "tie"){
+        console.log("It's a tie. You both chose " + playerSelection);
+    } else if (status === "win"){
+        console.log("You won the round! " + playerSelection + " beats " + computerSelection);
+    } else {
+        console.log("You lost the round! " + computerSelection + " beats " + playerSelection );
+    }
+
+    return status;
+}
 
 
-// console.log(playRound(playerSelection, computerSelection));
+function game(){
+    let computerScore = 0;
+    let playerScore = 0;
+    let status;
+
+    for(let i = 0; i < 5 && computerScore < 3 && playerScore < 3; i++){
+        status = roundStatus();
+
+       if(status === "win"){
+            playerScore++;
+        } else if (status === "lose"){
+            computerScore++;
+        } else if (status === "tie"){
+            i--;
+        }
+
+        console.log("Player Score: " + playerScore);
+        console.log("Computer Score: " + computerScore);
+    }
+
+    
+    if(computerScore > playerScore){
+        console.log("YOU LOSE!");
+    } else {
+        console.log("YOU WIN!");
+    }
+}
+
+game();
