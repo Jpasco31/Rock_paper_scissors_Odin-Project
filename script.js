@@ -9,6 +9,7 @@ function getComputerChoice(){
 //function to get round winner
 function playRound(playerChoice, comChoice) {
     playerChoice = playerChoice.toLowerCase();
+    comChoice = comChoice.toLowerCase();
 
     if(playerChoice === comChoice){
         return "tie";
