@@ -36,49 +36,73 @@ function playRound(playerChoice, comChoice) {
 }
 
 //helper function to game function check the winner of round 
-function roundStatus(){
+function roundStatus(playerSelection){
     let computerSelection = getComputerChoice();
-    let playerSelection = prompt("Rock, paper or scissors? Choose");
     let status = playRound(playerSelection, computerSelection);
 
+    let roundStatus = document.querySelector('#round-status');
     if(status === "tie"){
-        console.log("It's a tie. You both chose " + playerSelection);
+        roundStatus.innerHTML = `It's a tie! you both chose ${computerSelection}`;
     } else if (status === "win"){
-        console.log("You won the round! " + playerSelection + " beats " + computerSelection);
+        roundStatus.innerHTML = `You WON the round! ${playerSelection} beats ${computerSelection}`;
     } else {
-        console.log("You lost the round! " + computerSelection + " beats " + playerSelection );
+        roundStatus.innerHTML = `You LOST the round! ${computerSelection} beats ${playerSelection}`;
     }
 
     return status;
 }
 
+function updateScore(playerScore, computerScore){
+    document.querySelector('#player-score').textContent = playerScore;
+    document.querySelector('#comp-score').textContent = computerScore;
+}
+
+function gameStatusWon(playerScore, ComputerScore){
+    return playerScore >= 5 || ComputerScore >= 5;
+}
+
+function displayGameWinner(playerScore, computerScore){
+    let gameWinner = document.createElement('h2');
+    let roundResults = document.querySelector('#round-results');
+
+    if (computerScore > playerScore) {
+            gameWinner.textContent = 'COMPUTER WINS!';
+    } else {
+        gameWinner.textContent = 'PLAYER WINS';
+    }
+    console.log('test');
+    roundResults.innerHTML = ''; // Clear previous content
+    roundResults.appendChild(gameWinner);
+}
+
 //function to start the game
-function game(){
+function game() {
     let computerScore = 0;
     let playerScore = 0;
-    let status;
+    let playerSelectionButtons = document.querySelectorAll('.selection-button');
 
-    for(let i = 0; i < 5 && computerScore < 3 && playerScore < 3; i++){
-        status = roundStatus();
+    playerSelectionButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            let playerSelection = button.value;
+            let status = roundStatus(playerSelection);
 
-       if(status === "win"){
-            playerScore++;
-        } else if (status === "lose"){
-            computerScore++;
-        } else if (status === "tie"){
-            i--;
-        }
+            if (status === "win") {
+                playerScore++;
+            } else if (status === "lose") {
+                computerScore++;
+            }
 
-        console.log("Player Score: " + playerScore);
-        console.log("Computer Score: " + computerScore);
-    }
+            updateScore(playerScore, computerScore);
+            
+            if (gameStatusWon(playerScore, computerScore)) {
+                displayGameWinner(playerScore, computerScore);
+                return;
+            }
+        });
+    });
 
     
-    if(computerScore > playerScore){
-        console.log("YOU LOSE!");
-    } else {
-        console.log("YOU WIN!");
-    }
 }
+
 
 game();
