@@ -36,6 +36,10 @@ function playRound(playerChoice, comChoice) {
 }
 
 //helper function to game function check the winner of round 
+function gameStatusWon(playerScore, ComputerScore){
+    return playerScore >= 5 || ComputerScore >= 5;
+}
+
 function roundStatus(playerSelection){
     let computerSelection = getComputerChoice();
     let status = playRound(playerSelection, computerSelection);
@@ -57,22 +61,33 @@ function updateScore(playerScore, computerScore){
     document.querySelector('#comp-score').textContent = computerScore;
 }
 
-function gameStatusWon(playerScore, ComputerScore){
-    return playerScore >= 5 || ComputerScore >= 5;
+function displayGameWinner(playerScore, computerScore){
+    let roundStatus = document.querySelector('#round-status');
+    if (computerScore > playerScore) {
+        roundStatus.textContent = 'COMPUTER WINS!';
+    } else {
+        roundStatus.textContent = 'PLAYER WINS';
+    }
 }
 
-function displayGameWinner(playerScore, computerScore){
-    let gameWinner = document.createElement('h2');
-    let roundResults = document.querySelector('#round-results');
+let gameEnded = gameStatusWon();
 
-    if (computerScore > playerScore) {
-            gameWinner.textContent = 'COMPUTER WINS!';
-    } else {
-        gameWinner.textContent = 'PLAYER WINS';
-    }
-    console.log('test');
-    roundResults.innerHTML = ''; // Clear previous content
-    roundResults.appendChild(gameWinner);
+function endOfGame(){
+    const restart = document.createElement('button');
+    restart.setAttribute('id','restart');
+    restart.innerHTML = 'RESTART GAME';
+
+    let roundResults = document.querySelector('#round-results');
+    roundResults.appendChild(restart);
+
+    restart.addEventListener('click', () => {
+            updateScore(0,0);
+            gameEnded = false;
+            roundResults.innerHTML ='';
+            const roundStatus = document.createElement('p');
+            roundStatus.setAttribute('id','round-status');
+            roundResults.appendChild(roundStatus);
+        });
 }
 
 //function to start the game
@@ -83,6 +98,10 @@ function game() {
 
     playerSelectionButtons.forEach((button) => {
         button.addEventListener('click', () => {
+            if(gameEnded){
+                return;
+            }
+
             let playerSelection = button.value;
             let status = roundStatus(playerSelection);
 
@@ -96,12 +115,13 @@ function game() {
             
             if (gameStatusWon(playerScore, computerScore)) {
                 displayGameWinner(playerScore, computerScore);
-                return;
+                endOfGame();
+                computerScore = 0;
+                playerScore = 0;
+                gameEnded = true;
             }
         });
     });
-
-    
 }
 
 
