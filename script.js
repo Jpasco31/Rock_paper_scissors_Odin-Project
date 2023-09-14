@@ -108,6 +108,12 @@ function game() {
             let playerSelection = button.value;
             let status = roundStatus(playerSelection);
 
+            document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}White.png`;
+
+            setTimeout(() => {
+                document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}Black.png`;
+            }, 100);
+
             if (status === "win") {
                 playerScore++;
             } else if (status === "lose") {
