@@ -68,6 +68,7 @@ function displayGameWinner(playerScore, computerScore){
     } else {
         roundStatus.textContent = 'PLAYER WINS';
     }
+    
 }
 
 let gameEnded = gameStatusWon();
@@ -75,6 +76,7 @@ let gameEnded = gameStatusWon();
 function endOfGame(){
     const restart = document.createElement('button');
     restart.setAttribute('id','restart');
+    restart.setAttribute('style','font-size: 2rem; padding:1rem; background-color:#000; color:#fff; border-radius: 5%; margin: 2rem;');
     restart.innerHTML = 'RESTART GAME';
 
     let roundResults = document.querySelector('#round-results');
