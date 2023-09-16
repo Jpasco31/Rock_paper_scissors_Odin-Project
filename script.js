@@ -112,7 +112,7 @@ function game() {
 
             setTimeout(() => {
                 document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}Black.png`;
-            }, 100);
+            }, 500);
 
             if (status === "win") {
                 playerScore++;
