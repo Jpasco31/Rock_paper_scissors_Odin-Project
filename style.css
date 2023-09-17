@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -9,6 +11,7 @@ body {
     align-items: center;
     justify-content: center;
     padding:2%;
+    font-family: 'Press Start 2P', cursive;
 }
 
 header{
@@ -48,10 +51,24 @@ button {
 
 #selection-buttons {
     flex-direction:row;
+    margin-bottom: 3em;
 }
 
 #round-status {
     font-size:2rem;
+}
+
+#score-board{
+    display:flex;
+}
+
+#scores {
+    display:flex;
+    flex-direction: row;
+}
+
+#scores .container {
+    margin:2em 2em;
 }
 
 #score-board h2{
@@ -59,11 +76,12 @@ button {
     margin-bottom:.5em;
 }
 
-#score-board h3{
+#scores .container h3{
     font-size:2em;
+    margin-bottom: 1em;
 }
 
-#score-board p{
+#scores .container p{
     font-size:1.5em;
     margin-bottom:.5em;
 }
