@@ -1,6 +1,6 @@
 const roundStatusDiv = document.querySelector('#round-status');
 
-let score = JSON.parse(localStorage.getItem('score'));
+let score = JSON.parse(localStorage.getItem('score')) || { player: 0, computer: 0 };
 
 //function to get Computer Choice
 function getComputerChoice(){
