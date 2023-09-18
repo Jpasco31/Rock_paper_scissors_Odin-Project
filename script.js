@@ -1,9 +1,6 @@
 const roundStatusDiv = document.querySelector('#round-status');
 
-const score = {
-    player : 0, 
-    computer : 0
-};
+let score = JSON.parse(localStorage.getItem('score'));
 
 //function to get Computer Choice
 function getComputerChoice(){
@@ -31,7 +28,7 @@ function playRound(playerChoice, comChoice) {
     } else if (choice.player=== "paper") {
         if(choice.computer === "scissors"){
             return "lose";
-        } else if (choice.player === "rock"){
+        } else if (choice.computer === "rock"){
             return "win";
         }
     } else if (choice.player === "scissors"){
@@ -43,11 +40,6 @@ function playRound(playerChoice, comChoice) {
     } 
 
     return "Not a valid choice";
-}
-
-//helper function to game function check the winner of round 
-function gameStatusWon(){
-    return score.player >= 5 || score.computer >= 5;
 }
 
 function roundStatus(playerSelection){
@@ -88,6 +80,11 @@ function displayGameWinner(playerScore, computerScore){
 
 let gameEnded = gameStatusWon();
 
+//helper function to game function check the winner of round 
+function gameStatusWon(){
+    return score.player >= 5 || score.computer >= 5;
+}
+
 function endOfGame(){
     const restart = document.createElement('button');
     restart.setAttribute('id','restart');
@@ -100,6 +97,7 @@ function endOfGame(){
     restart.addEventListener('click', () => {
             score.player = 0;
             score.computer = 0;
+            localStorage.setItem('score', JSON.stringify(score));
             gameEnded = false;
             showScore();
             roundStatusDiv.textContent ='';
@@ -107,9 +105,24 @@ function endOfGame(){
         });
 }
 
+function gameStatus(){
+    if (gameStatusWon() === false ) return;
+
+    displayGameWinner(score.player, score.computer);
+    gameEnded = true;
+    endOfGame();
+}
+
+function clickEffect(){
+    
+}
+
 //function to start the game
-function game() {
-    let playerSelectionButtons = document.querySelectorAll('.selection-button');
+function play() {
+    gameStatus();
+    showScore();
+
+    const playerSelectionButtons = document.querySelectorAll('.selection-button');
 
     playerSelectionButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -119,25 +132,21 @@ function game() {
 
             let playerSelection = button.value;
             let status = roundStatus(playerSelection);
+            updateScore(status);
+            showScore();
+            localStorage.setItem('score', JSON.stringify(score));
 
             document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}White.png`;
 
             setTimeout(() => {
                 document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}Black.png`;
-            }, 500);
-
-            updateScore(status);
-
-            showScore();
+            }, 500); 
             
-            if (gameStatusWon()) {
-                displayGameWinner(score.player, score.computer);
-                endOfGame();
-                gameEnded = true;
-            }
+            gameStatus();
         });
     });
 }
 
-
-game();
+window.onload = () => {
+    play();
+}
