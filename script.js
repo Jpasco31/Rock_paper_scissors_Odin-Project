@@ -1,3 +1,10 @@
+const roundStatusDiv = document.querySelector('#round-status');
+
+const score = {
+    player : 0, 
+    computer : 0
+};
+
 //function to get Computer Choice
 function getComputerChoice(){
     const computerOptions = ["rock", "paper", "scissors"];
@@ -8,27 +15,29 @@ function getComputerChoice(){
 
 //function to get round winner
 function playRound(playerChoice, comChoice) {
-    playerChoice = playerChoice.toLowerCase();
-    comChoice = comChoice.toLowerCase();
+    const choice = {
+        player : playerChoice.toLowerCase(),
+        computer : comChoice.toLowerCase()
+    }
 
-    if(playerChoice === comChoice){
+    if(choice.player === choice.computer){
         return "tie";
-    } else if (playerChoice === "rock") {
-        if(comChoice === "paper"){
+    } else if (choice.player === "rock") {
+        if(choice.computer === "paper"){
             return "lose";
-        } else if (comChoice === "scissors"){
+        } else if (choice.computer === "scissors"){
             return "win";
         }
-    } else if (playerChoice === "paper") {
-        if(comChoice === "scissors"){
+    } else if (choice.player=== "paper") {
+        if(choice.computer === "scissors"){
             return "lose";
-        } else if (comChoice === "rock"){
+        } else if (choice.player === "rock"){
             return "win";
         }
-    } else if (playerChoice === "scissors"){
-        if(comChoice === "rock"){
+    } else if (choice.player === "scissors"){
+        if(choice.computer === "rock"){
             return "lose"
-        } else if (comChoice === "paper"){
+        } else if (choice.computer === "paper"){
             return "win";
         }
     } 
@@ -37,39 +46,44 @@ function playRound(playerChoice, comChoice) {
 }
 
 //helper function to game function check the winner of round 
-function gameStatusWon(playerScore, ComputerScore){
-    return playerScore >= 5 || ComputerScore >= 5;
+function gameStatusWon(){
+    return score.player >= 5 || score.computer >= 5;
 }
 
 function roundStatus(playerSelection){
     let computerSelection = getComputerChoice();
     let status = playRound(playerSelection, computerSelection);
 
-    let roundStatus = document.querySelector('#round-status');
     if(status === "tie"){
-        roundStatus.innerHTML = `It's a tie! you both chose ${computerSelection}`;
+        roundStatusDiv.textContent = `It's a tie! you both chose ${computerSelection}`;
     } else if (status === "win"){
-        roundStatus.innerHTML = `You WON the round! ${playerSelection} beats ${computerSelection}`;
+        roundStatusDiv.textContent = `You WON the round! ${playerSelection} beats ${computerSelection}`;
     } else {
-        roundStatus.innerHTML = `You LOST the round! ${computerSelection} beats ${playerSelection}`;
+        roundStatusDiv.textContent = `You LOST the round! ${computerSelection} beats ${playerSelection}`;
     }
 
     return status;
 }
 
-function updateScore(playerScore, computerScore){
-    document.querySelector('#player-score').textContent = playerScore;
-    document.querySelector('#comp-score').textContent = computerScore;
+function updateScore(status){
+    if (status === "win") {
+        score.player++;
+    } else if (status === "lose") {
+        score.computer++;
+    }
+}
+
+function showScore(){
+    document.querySelector('#player-score').textContent = score.player;
+    document.querySelector('#comp-score').textContent = score.computer;
 }
 
 function displayGameWinner(playerScore, computerScore){
-    let roundStatus = document.querySelector('#round-status');
     if (computerScore > playerScore) {
-        roundStatus.textContent = 'COMPUTER WINS!';
+        roundStatusDiv.textContent = 'COMPUTER WINS!';
     } else {
-        roundStatus.textContent = 'PLAYER WINS';
+        roundStatusDiv.textContent = 'PLAYER WINS';
     }
-    
 }
 
 let gameEnded = gameStatusWon();
@@ -78,25 +92,23 @@ function endOfGame(){
     const restart = document.createElement('button');
     restart.setAttribute('id','restart');
     restart.setAttribute('style','font-size: 2rem; padding:1rem; background-color:#000; color:#fff; border-radius: 5%; margin: 2rem;');
-    restart.innerHTML = 'RESTART GAME';
+    restart.textContent = 'RESTART GAME';
 
-    let roundResults = document.querySelector('#round-results');
+    const roundResults = document.querySelector('#round-results');
     roundResults.appendChild(restart);
 
     restart.addEventListener('click', () => {
-            updateScore(0,0);
+            score.player = 0;
+            score.computer = 0;
             gameEnded = false;
-            roundResults.innerHTML ='';
-            const roundStatus = document.createElement('p');
-            roundStatus.setAttribute('id','round-status');
-            roundResults.appendChild(roundStatus);
+            showScore();
+            roundStatusDiv.textContent ='';
+            roundResults.removeChild(restart);
         });
 }
 
 //function to start the game
 function game() {
-    let computerScore = 0;
-    let playerScore = 0;
     let playerSelectionButtons = document.querySelectorAll('.selection-button');
 
     playerSelectionButtons.forEach((button) => {
@@ -114,19 +126,13 @@ function game() {
                 document.getElementById(`${playerSelection}-img`).src = `images/${playerSelection}Black.png`;
             }, 500);
 
-            if (status === "win") {
-                playerScore++;
-            } else if (status === "lose") {
-                computerScore++;
-            }
+            updateScore(status);
 
-            updateScore(playerScore, computerScore);
+            showScore();
             
-            if (gameStatusWon(playerScore, computerScore)) {
-                displayGameWinner(playerScore, computerScore);
+            if (gameStatusWon()) {
+                displayGameWinner(score.player, score.computer);
                 endOfGame();
-                computerScore = 0;
-                playerScore = 0;
                 gameEnded = true;
             }
         });
